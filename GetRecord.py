@@ -1,10 +1,13 @@
 # 外部DNSの試験自動化プログラム
 import subprocess
 import csv
-import datetime
 #　テストデータをインスタンス化
 class TestData:
-    pass
+    def __init__(self):
+        self.type = ""
+        self.record = ""
+        self.value = []
+        self.nserver = ""
 #　特定のレコード情報を取得する。テストを実行して、ファイルに結果を書き込む
 #　引数として、type、レコード、DNS指定ができること。
 def GetRecord(type,record,nserver,filename):
@@ -72,35 +75,3 @@ def ReadTestData(file):
             data.append(a)
             a = TestData()
     return data
-
-x = []
-a = TestData()
-a.type = ""
-a.record = ""
-a.value = []
-a.nserver = ""
-
-count_failed = 0
-count_succeed = 0
-now = datetime.datetime.now()
-nowstr = "{0:%Y%m%d%H%M}".format(now)
-
-x = ReadTestData("Testdata.csv")
-#filename = input("nslookup結果ファイル名を入力してください。")
-#filename2 = input("正誤判定結果ファイル名を入力してください。")
-#examdata.nserver="dns102-1.jp1.ecl.ntt.com"
-filename = "NslookupResult" + nowstr + ".txt"
-filename2 = "JudgeResult" + nowstr + ".txt"
-for examdata in x:
-    examdata.nserver="8.8.8.8"
-    DefineTestData(examdata)
-    GetRecord(examdata.type,examdata.record,examdata.nserver,filename)
-    GetRecord(examdata.type,examdata.record,examdata.nserver,"tmpfile")
-    a,b = CheckValue(examdata.value,"tmpfile")
-    count_succeed += a
-    count_failed += b
-    ClearResultData("tmpfile")
-
-with open(filename2,"w") as f:
-    print(subprocess.check_output(["date"]),file=f)
-    print("ーーーーーーーーーー\n試験結果サマリ\n成功回数/試行回数="+str(count_succeed)+"/"+str(count_failed+count_succeed)+"\nーーーーーーーーーー", file=f)
