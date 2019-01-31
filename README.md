@@ -17,6 +17,6 @@
 
 # テストデータ例
 ---------
->>  record_type,record_data,record_value
->>  a,record.hogehoge.hoge,1.1.1.1
+>>  record_type,record_data,record_value  
+>>  a,record.hogehoge.hoge,1.1.1.1  
 ---------
